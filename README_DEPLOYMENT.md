@@ -51,6 +51,8 @@ If you'd like, I can help set this up or prepare the Vercel project if you give 
 ## Deploy to GitHub Pages (automatic)
 This repository includes a GitHub Actions workflow that will build the Vite app and publish the `dist` output to GitHub Pages on every push to `main`.
 
+Note: Vercel and CI now require Node.js 24+. Ensure `engines.node` is set to `24.x` in `package.json` (already configured). If your Vercel build previously failed with a 'Node.js 18.x is discontinued' message, pushing the updated `package.json` and this workflow will fix the issue.
+
 How it works:
 - On push to `main`, `deploy_pages.yml` will run `npm ci` and `npm run build`, upload `dist` and deploy via the official `actions/deploy-pages` action.
 - No extra secrets are required; the workflow uses `GITHUB_TOKEN` to publish.
