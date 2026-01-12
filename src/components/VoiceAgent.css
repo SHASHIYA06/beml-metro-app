@@ -1,0 +1,7 @@
+/* Copy from Part 7 */
+.voice-agent-panel{width:480px;background:#fff;border:1px solid #e6e6e6;padding:12px;border-radius:6px}
+.voice-header{display:flex;justify-content:space-between;align-items:center}
+.controls{margin:12px 0}
+.transcript-box{min-height:60px;border:1px solid #eee;padding:8px;border-radius:4px;background:#fafafa}
+.result-box{margin-top:12px;border-top:1px solid #eee;padding-top:12px}
+.btn-danger{background:#f44336;color:#fff;border:none;padding:8px 10px;border-radius:4px}

@@ -1,0 +1,11 @@
+/* Copy from Part 8 */
+.documents-page{padding:16px}
+.page-header{margin-bottom:16px}
+.search-form{display:flex;gap:8px;margin-bottom:16px}
+.documents-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+.doc-card{border:1px solid #e6e6e6;padding:12px;border-radius:6px;background:#fff}
+.doc-title{font-weight:600;margin-bottom:6px}
+.doc-meta{font-size:12px;color:#666;margin-bottom:8px}
+.doc-actions{display:flex;gap:8px}
+.no-docs{padding:24px;color:#666;text-align:center}
+.spinner{padding:8px}

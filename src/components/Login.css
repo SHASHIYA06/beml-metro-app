@@ -1,0 +1,14 @@
+/* Copy from Part 7 */
+.login-page{display:flex;align-items:center;justify-content:center;height:80vh;position:relative}
+.login-container{width:480px;background:#fff;padding:24px;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,0.06);position:relative}
+.watermark-overlay{position:absolute;left:0;top:0;right:0;bottom:0;pointer-events:none}
+.login-logo{height:48px}
+.form-control{width:100%;padding:8px;border:1px solid #e6e6e6;border-radius:4px}
+.btn-block{width:100%}
+.connection-status{margin-top:8px;font-size:13px}
+.error-message{background:#ffecec;padding:8px;border:1px solid #ffbcbc;border-radius:4px;margin-bottom:8px}
+.version{font-size:12px;color:#888}
+.welcome-screen{display:flex;align-items:center;justify-content:center;height:80vh}
+.welcome-logo{height:96px;margin-bottom:8px}
+.welcome-title{letter-spacing:1px}
+.spinner-welcome{height:8px;width:80px;background:#eaeaea;border-radius:4px;margin-top:12px}

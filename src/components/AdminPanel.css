@@ -1,0 +1,8 @@
+/* Copy from Part 8 */
+.admin-page{padding:16px}
+.page-header{margin-bottom:12px}
+.admin-section{border:1px solid #e6e6e6;padding:12px;border-radius:6px;margin-bottom:12px;background:#fff}
+.user-form{display:flex;flex-direction:column;gap:8px;max-width:480px}
+.user-form input,.user-form select{padding:8px;border:1px solid #ddd;border-radius:4px}
+.btn-primary{background:#1976d2;color:#fff;border:none;padding:8px 12px;border-radius:4px}
+.alert{background:#e6ffe6;padding:8px;border:1px solid #b2ffb2;border-radius:4px;margin-bottom:12px}
