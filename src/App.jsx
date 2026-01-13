@@ -16,6 +16,19 @@ export default function App() {
   const { user, loading, login, logout } = useAuth()
   const [showVoiceAgent, setShowVoiceAgent] = useState(false)
 
+  console.log('App render. User state:', user, 'Loading:', loading);
+
+  // Wrap login/logout to log
+  const handleLogin = (userData) => {
+    console.log('App login called with:', userData);
+    login(userData);
+  }
+
+  const handleLogout = () => {
+    console.log('App logout called');
+    logout();
+  }
+
   if (loading) return (
     <div className="flex items-center justify-center h-screen">
       <div className="text-center">
@@ -48,14 +61,14 @@ export default function App() {
                 <div className="text-xs text-gray-500">{user.role}</div>
               </div>
 
-              <button className="px-3 py-2 rounded border" onClick={logout}>Logout</button>
+              <button className="px-3 py-2 rounded border" onClick={handleLogout}>Logout</button>
             </div>
           </header>
         )}
 
         <main className="p-6">
           <Routes>
-            <Route path="/login" element={!user ? <Login onLogin={login} /> : <Navigate to="/dashboard" />} />
+            <Route path="/login" element={!user ? <Login onLogin={handleLogin} /> : <Navigate to="/dashboard" />} />
             <Route path="/dashboard" element={user ? <Dashboard user={user} /> : <Navigate to="/login" />} />
             <Route path="/work-entry" element={user ? <WorkEntry user={user} /> : <Navigate to="/login" />} />
             <Route path="/my-entries" element={user ? <MyEntries user={user} /> : <Navigate to="/login" />} />
