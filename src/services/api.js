@@ -237,6 +237,20 @@ class ApiService {
     }
   }
 
+  async addDocument(docData) {
+    try {
+      const formData = this.objectToFormData({
+        action: 'addDocument',
+        ...docData
+      });
+      const response = await this.axiosInstance.post(this.baseURL, formData);
+      return response.data;
+    } catch (error) {
+      console.error('Add document error:', error);
+      return { success: false, error: error.message };
+    }
+  }
+
   // Analytics
   async getAnalytics(params = {}) {
     try {
