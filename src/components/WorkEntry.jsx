@@ -43,7 +43,21 @@ const WorkEntry = ({ user }) => {
     setSuccess(false);
 
     try {
-      // Submit to Google Sheets
+      // 1. Upload files first (if any)
+      const uploadedFileUrls = [];
+      if (files.length > 0) {
+        for (const file of files) {
+          const uploadResult = await apiService.uploadFile(file);
+          if (uploadResult.success && uploadResult.fileUrl) {
+            uploadedFileUrls.push(uploadResult.fileUrl);
+          } else {
+            console.warn(`Failed to upload ${file.name}:`, uploadResult.error);
+            // Optional: Show a warning but continue, or throw error to stop submission
+          }
+        }
+      }
+
+      // 2. Submit to Google Sheets
       const result = await apiService.submitEntry({
         EmpID: formData.employeeId,
         EmpName: formData.employeeName,
@@ -54,7 +68,8 @@ const WorkEntry = ({ user }) => {
         Problem: formData.problem,
         ActionTaken: formData.actionTaken,
         Remarks: formData.remarks,
-        fileAttachment: files.length > 0 ? files.map(f => f.name).join(', ') : ''
+        // Attach links to the uploaded files
+        fileAttachment: uploadedFileUrls.length > 0 ? uploadedFileUrls.join(', ') : ''
       });
 
       if (result.success) {
@@ -75,7 +90,7 @@ const WorkEntry = ({ user }) => {
         });
 
         setSuccess(true);
-        
+
         // Reset form
         setFormData({
           employeeId: user.id,

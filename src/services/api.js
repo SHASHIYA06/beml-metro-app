@@ -166,6 +166,38 @@ class ApiService {
     }
   }
 
+  // File Upload
+  async uploadFile(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = async () => {
+        try {
+          const base64Data = reader.result.split(',')[1];
+          const formData = this.objectToFormData({
+            action: 'uploadFile',
+            fileName: file.name,
+            mimeType: file.type,
+            fileData: base64Data
+          });
+
+          // Uploads can be large, so we might need a longer timeout or specific config.
+          // Using the existing instance for now.
+          const response = await this.axiosInstance.post(this.baseURL, formData);
+          if (response.data.success) {
+            resolve({ success: true, fileUrl: response.data.fileUrl, fileId: response.data.fileId });
+          } else {
+            resolve({ success: false, error: response.data.error || 'Upload failed' });
+          }
+        } catch (error) {
+          console.error('Upload API error:', error);
+          resolve({ success: false, error: error.message });
+        }
+      };
+      reader.onerror = error => resolve({ success: false, error: 'File reading failed' });
+    });
+  }
+
   // Documents
   async getDocuments(searchQuery = '') {
     try {
