@@ -12,7 +12,7 @@ class SupabaseService {
   subscribeToEntries(callback) {
     return this.client
       .channel('entries')
-      .on('postgres_changes', 
+      .on('postgres_changes',
         { event: '*', schema: 'public', table: 'work_entries' },
         callback
       )
@@ -35,7 +35,7 @@ class SupabaseService {
       const { data, error } = await this.client
         .from('work_entries')
         .insert([entryData]);
-      
+
       if (error) throw error;
       return { success: true, data };
     } catch (error) {
@@ -55,7 +55,7 @@ class SupabaseService {
           chunks: chunks,
           updated_at: new Date().toISOString()
         }]);
-      
+
       if (error) throw error;
       return { success: true, data };
     } catch (error) {
@@ -71,7 +71,7 @@ class SupabaseService {
         search_query: query,
         match_count: limit
       });
-      
+
       if (error) throw error;
       return { success: true, results: data };
     } catch (error) {
@@ -91,7 +91,7 @@ class SupabaseService {
           embedding: embedding,
           metadata: metadata
         }]);
-      
+
       if (error) throw error;
       return { success: true, data };
     } catch (error) {
@@ -102,3 +102,4 @@ class SupabaseService {
 }
 
 export const supabaseService = new SupabaseService();
+export { supabase }; // Export supabase client for direct use in components
