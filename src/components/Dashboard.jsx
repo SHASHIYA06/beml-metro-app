@@ -32,7 +32,7 @@ export default function Dashboard({ user }) {
       // For now, using mock data
       setStats({
         totalEntries: 156,
-        pendingApprovals: user.role === 'Officer' || user.role === 'Admin' ? 12 : 0,
+        pendingApprovals: (user?.role === 'Officer' || user?.role === 'Admin') ? 12 : 0,
         recentDocuments: 45,
         myEntries: 23
       })
