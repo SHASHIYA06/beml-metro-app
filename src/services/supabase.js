@@ -1,11 +1,15 @@
 import { createClient } from '@supabase/supabase-js';
 import { config } from '../config';
 
-const supabase = createClient(config.supabaseUrl, config.supabaseAnonKey);
+// Only create Supabase client if credentials are provided
+const supabase = (config.supabaseUrl && config.supabaseAnonKey)
+  ? createClient(config.supabaseUrl, config.supabaseAnonKey)
+  : null;
 
 class SupabaseService {
   constructor() {
     this.client = supabase;
+    this.enabled = !!supabase;
   }
 
   // Real-time subscriptions
