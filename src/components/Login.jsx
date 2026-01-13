@@ -37,60 +37,29 @@ export default function Login({ onLogin }) {
       setLoading(false)
     }
   }
-}
-      }
-    } catch (err) {
-  console.error('Authentication error:', err)
-  setError(err.message || 'Authentication failed. Please try again.')
-} finally {
-  setLoading(false)
-}
-  }
 
-return (
-  <div className="login-container">
-    <div className="login-card">
-      <div className="login-header">
-        <h1>BEML Metro Operations</h1>
-        <p>Document Intelligence Platform</p>
-      </div>
-
-      <form onSubmit={handleSubmit} className="login-form">
-        <div className="form-group">
-          <label htmlFor="email">Email</label>
-          <input
-            id="email"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="your.email@beml.co.in"
-            required
-            disabled={loading}
-          />
+  return (
+    <div className="login-container">
+      <div className="login-card">
+        <div className="login-header">
+          <h1>BEML Metro App</h1>
+          <p>Maintenance & Document Intelligence Platform</p>
         </div>
 
-        <div className="form-group">
-          <label htmlFor="password">Password</label>
-          <input
-            id="password"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Enter your password"
-            required
-            minLength={6}
-            disabled={loading}
-          />
-        </div>
+        {error && (
+          <div className="alert alert-error">
+            {error}
+          </div>
+        )}
 
-        {mode === 'signup' && (
+        <form onSubmit={handleSubmit} className="login-form">
           <div className="form-group">
             <label htmlFor="role">Role</label>
             <select
               id="role"
               value={role}
               onChange={(e) => setRole(e.target.value)}
-              disabled={loading}
+              className="form-control"
             >
               <option value="Technician">Technician</option>
               <option value="Engineer">Engineer</option>
@@ -98,63 +67,46 @@ return (
               <option value="Admin">Admin</option>
             </select>
           </div>
-        )}
 
-        {error && (
-          <div className="error-message">
-            {error}
+          <div className="form-group">
+            <label htmlFor="email">Email / Employee ID</label>
+            <input
+              id="email"
+              type="text"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Enter your email or employee ID"
+              required
+              className="form-control"
+            />
           </div>
-        )}
 
-        <button
-          type="submit"
-          className="login-button"
-          disabled={loading}
-        >
-          {loading ? (
-            <span className="loading-spinner">
-              <span className="spinner"></span>
-              {mode === 'login' ? 'Signing in...' : 'Creating account...'}
-            </span>
-          ) : (
-            mode === 'login' ? 'Sign In' : 'Create Account'
-          )}
-        </button>
+          <div className="form-group">
+            <label htmlFor="password">Password</label>
+            <input
+              id="password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Enter your password"
+              required
+              className="form-control"
+            />
+          </div>
 
-        <div className="mode-toggle">
-          {mode === 'login' ? (
-            <p>
-              Don't have an account?{' '}
-              <button
-                type="button"
-                onClick={() => setMode('signup')}
-                className="link-button"
-                disabled={loading}
-              >
-                Sign up
-              </button>
-            </p>
-          ) : (
-            <p>
-              Already have an account?{' '}
-              <button
-                type="button"
-                onClick={() => setMode('login')}
-                className="link-button"
-                disabled={loading}
-              >
-                Sign in
-              </button>
-            </p>
-          )}
+          <button
+            type="submit"
+            disabled={loading}
+            className="btn btn-primary btn-block"
+          >
+            {loading ? 'Logging in...' : 'Login'}
+          </button>
+        </form>
+
+        <div className="login-footer">
+          <p>BEML/KMRCL Metro Operations Platform</p>
         </div>
-      </form>
-
-      <div className="login-footer">
-        <p>© {new Date().getFullYear()} BEML Metro</p>
-        <p className="text-xs">Created by Shashi Shekhar Mishra</p>
       </div>
     </div>
-  </div>
-)
+  )
 }
