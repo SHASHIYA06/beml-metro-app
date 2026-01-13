@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { supabaseService } from '../services/supabase'
 import './Dashboard.css'
 
 export default function Dashboard({ user }) {
@@ -15,15 +14,6 @@ export default function Dashboard({ user }) {
 
   useEffect(() => {
     loadDashboardData()
-
-    // Subscribe to real-time updates
-    const entriesSubscription = supabaseService.subscribeToEntries(() => {
-      loadDashboardData()
-    })
-
-    return () => {
-      entriesSubscription.unsubscribe()
-    }
   }, [user])
 
   const loadDashboardData = async () => {
@@ -74,7 +64,7 @@ export default function Dashboard({ user }) {
       }
     ]
 
-    if (user.role === 'Officer' || user.role === 'Admin') {
+    if (user?.role === 'Officer' || user?.role === 'Admin') {
       baseCards.push({
         title: 'Supervisor',
         description: 'Review team entries',
@@ -84,7 +74,7 @@ export default function Dashboard({ user }) {
       })
     }
 
-    if (user.role === 'Admin') {
+    if (user?.role === 'Admin') {
       baseCards.push({
         title: 'Admin Panel',
         description: 'Manage users and settings',
@@ -109,8 +99,8 @@ export default function Dashboard({ user }) {
   return (
     <div className="dashboard-container">
       <div className="dashboard-header">
-        <h1>Welcome back, {user.name}!</h1>
-        <p className="role-badge">{user.role}</p>
+        <h1>Welcome back, {user?.name || 'User'}!</h1>
+        <p className="role-badge">{user?.role || 'User'}</p>
       </div>
 
       {/* Stats Grid */}
@@ -123,7 +113,7 @@ export default function Dashboard({ user }) {
           </div>
         </div>
 
-        {(user.role === 'Officer' || user.role === 'Admin') && (
+        {(user?.role === 'Officer' || user?.role === 'Admin') && (
           <div className="stat-card highlight">
             <div className="stat-icon">⏳</div>
             <div className="stat-content">
