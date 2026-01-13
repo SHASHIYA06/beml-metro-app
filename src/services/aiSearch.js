@@ -1,77 +1,25 @@
 import { config } from '../config';
-import { supabaseService } from './supabase';
+import { apiService } from './api';
 
 class AISearchService {
   constructor() {
     this.geminiApiKey = config.geminiApiKey;
-    this.apiUrl = `https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key=${this.geminiApiKey}`;
-  }
-
-  // Generate embeddings
-  async generateEmbedding(text) {
-    try {
-      const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1/models/embedding-001:embedContent?key=${this.geminiApiKey}`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            model: 'models/embedding-001',
-            content: { parts: [{ text }] }
-          })
-        }
-      );
-
-      const data = await response.json();
-      return {
-        success: true,
-        embedding: data.embedding.values
-      };
-    } catch (error) {
-      console.error('Embedding error:', error);
-      return { success: false, error: error.message };
-    }
+    // We delegate to backend for actual storage/search
   }
 
   // RAG Search
-  async ragSearch(query, context = []) {
+  async ragSearch(query) {
     try {
-      // Step 1: Get relevant documents from vector store
-      const searchResults = await supabaseService.searchDocuments(query);
-      
-      if (!searchResults.success) {
-        throw new Error('Vector search failed');
-      }
-
-      // Step 2: Build context from retrieved documents
-      const retrievedContext = searchResults.results
-        .map(doc => `Document: ${doc.name}\n${doc.content}`)
-        .join('\n\n');
-
-      // Step 3: Generate response with context
-      const prompt = `Based on the following documents and context, answer the question.\n\nContext:\n${retrievedContext}\n\nQuestion: ${query}\n\nPlease provide a detailed answer with citations to the source documents.`;
-
-      const response = await fetch(this.apiUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{
-            parts: [{ text: prompt }]
-          }]
-        })
-      });
-
-      const data = await response.json();
-      
-      if (data.candidates && data.candidates[0]) {
+      // Delegate to centralized API service (Apps Script Backend)
+      const response = await apiService.aiSearch(query);
+      if (response.success) {
         return {
           success: true,
-          answer: data.candidates[0].content.parts[0].text,
-          sources: searchResults.results
+          answer: response.answer || response.results?.[0]?.snippet || 'No answer generated.',
+          sources: response.sources || response.results || []
         };
       }
-
-      throw new Error('No response generated');
+      return { success: false, error: response.error };
     } catch (error) {
       console.error('RAG search error:', error);
       return { success: false, error: error.message };
@@ -122,7 +70,7 @@ class AISearchService {
       });
 
       const data = await response.json();
-      
+
       if (data.candidates && data.candidates[0]) {
         return {
           success: true,
@@ -151,7 +99,7 @@ class AISearchService {
       });
 
       const data = await response.json();
-      
+
       if (data.candidates && data.candidates[0]) {
         return {
           success: true,
