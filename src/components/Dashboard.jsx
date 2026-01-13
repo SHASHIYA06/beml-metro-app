@@ -18,22 +18,33 @@ export default function Dashboard({ user }) {
 
   const loadDashboardData = async () => {
     try {
-      // In a real implementation, these would be actual Supabase queries
-      // For now, using mock data
-      setStats({
-        totalEntries: 156,
-        pendingApprovals: (user?.role === 'Officer' || user?.role === 'Admin') ? 12 : 0,
-        recentDocuments: 45,
-        myEntries: 23
-      })
+      setLoading(true);
+      // Fetch real stats from Google Apps Script Backend
+      const response = await apiService.getDashboardStats();
 
-      setRecentActivity([
-        { id: 1, type: 'entry', message: 'Work entry submitted', time: '2 hours ago' },
-        { id: 2, type: 'document', message: 'Document uploaded: Safety Report', time: '5 hours ago' },
-        { id: 3, type: 'approval', message: 'Entry approved by supervisor', time: '1 day ago' }
-      ])
+      if (response && response.success) {
+        setStats({
+          totalEntries: response.stats.totalEntries || 0,
+          pendingApprovals: (user?.role === 'Officer' || user?.role === 'Admin') ? (response.stats.pendingApprovals || 0) : 0,
+          recentDocuments: response.stats.recentDocuments || 0,
+          myEntries: response.stats.myEntries || 0 // Or fetch separately if needed
+        });
+
+        // Use backend activity or fallback if empty
+        if (response.recentActivity && response.recentActivity.length > 0) {
+          setRecentActivity(response.recentActivity);
+        } else {
+          setRecentActivity([]);
+        }
+      } else {
+        // Fallback if backend doesn't return stats yet (avoid blank screen)
+        console.warn('Backend stats fetch failed, using zero/empty state', response?.error);
+        setStats({ totalEntries: 0, pendingApprovals: 0, recentDocuments: 0, myEntries: 0 });
+      }
+
     } catch (error) {
       console.error('Error loading dashboard data:', error)
+      setStats({ totalEntries: 0, pendingApprovals: 0, recentDocuments: 0, myEntries: 0 });
     } finally {
       setLoading(false)
     }

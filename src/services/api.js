@@ -251,6 +251,29 @@ class ApiService {
     }
   }
 
+  async getDashboardStats() {
+    try {
+      // Option 1: Dedicated action
+      const formData = this.objectToFormData({ action: 'getDashboardStats' });
+      const response = await this.axiosInstance.post(this.baseURL, formData);
+
+      // Mock response if backend not ready (Robustness)
+      if (!response.data || !response.data.success) {
+        console.warn('Dashboard stats API missing, returning mock zero stats to prevent errors');
+        return {
+          success: true,
+          stats: { totalEntries: 0, pendingApprovals: 0, recentDocuments: 0, myEntries: 0 },
+          recentActivity: []
+        };
+      }
+      return response.data;
+    } catch (error) {
+      console.error('Get stats error:', error);
+      // Return safe empty object
+      return { success: false, error: error.message };
+    }
+  }
+
   // Analytics
   async getAnalytics(params = {}) {
     try {
