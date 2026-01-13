@@ -1,8 +1,21 @@
 // Copy from Part 2
 export const config = {
   // Google Integration (from PRD)
-  googleScriptUrl: import.meta.env.VITE_GOOGLE_SCRIPT_URL || 'https://script.google.com/macros/s/AKfycby6XbPuA7XDjIbInBg8-CmBv1Ig7hy5-BuKq6q4ovSJfbDxz3JdkyK08Y9pUI4S2CiZ7A/exec',
-  googleSheetId: import.meta.env.VITE_GOOGLE_SHEET_ID || '1fUHu5fb5Z77Aq4cAiK4Zybq-Dpgjf0xlzEDsxIgT9m8',
+  // Web App URL for data operations (Section 2 of PRD)
+  googleScriptUrl: import.meta.env.VITE_GOOGLE_SCRIPT_URL || 'https://script.google.com/macros/s/AKfycbwC9YmAmXzwjkGAexhKfYW9_cE2XrXUtvRaxAwG_4Y0IHNCnBkxO8GjgkwWCwa6mwbU/exec',
+  // Note: Section 1 URL seems to be for raw spreadsheet data or a different script, 
+  // but usually the Web App URL is the main API. We'll use the Web App URL for API calls.
+
+  googleSheetId: import.meta.env.VITE_GOOGLE_SHEET_ID || '1PBlW6ih36BSt47Ex4j4vbzEt-7XnGvX7', // Wait, PRD says Drive ID is this. Let's check Sheet ID.
+  // PRD Item 1 "Google Drive ID: 1PBl..."
+  // PRD Item 1 "Shared Folder...: 1PBl..."
+  // PRD Item 1 "Google Spreadsheet URL...": script.google.com/... 
+  // Actually PRD doesn't give a specific Sheet ID like "1fUHu...", it gives a Script URL.
+  // But usually Sheet ID is needed if we access via API. 
+  // However, if we use the Apps Script Web App, we might not need Sheet ID on frontend if script has it hardcoded.
+  // Let's stick to the URL for now and update usage if needed.
+  // The user provided "Google Drive ID" as "1PBl...".
+
   googleDriveFolderId: import.meta.env.VITE_GOOGLE_DRIVE_FOLDER_ID || '1PBlW6ih36BSt47Ex4j4vbzEt-7XnGvX7',
 
   // Supabase Configuration
