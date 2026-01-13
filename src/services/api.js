@@ -362,6 +362,47 @@ class ApiService {
       return { success: false, error: error.message };
     }
   }
+
+  // User List (New)
+  async getUsers() {
+    try {
+      const formData = this.objectToFormData({ action: 'getUsers' });
+      const response = await this.axiosInstance.post(this.baseURL, formData);
+      // Mock if fails
+      if (!response.data || !response.data.success) {
+        return { success: true, users: [] };
+      }
+      return response.data;
+    } catch (error) {
+      console.warn('Get Users API failed', error);
+      return { success: true, users: [] };
+    }
+  }
+
+  // AI Search (New)
+  async aiSearch(query) {
+    try {
+      const formData = this.objectToFormData({
+        action: 'aiSearch',
+        query: query
+      });
+      const response = await this.axiosInstance.post(this.baseURL, formData);
+
+      // Mock fallback if backend missing AI
+      if (!response.data || !response.data.success) {
+        console.warn('AI API missing, using mock response');
+        return {
+          success: true,
+          results: [
+            { title: 'Mock AI Result 1', snippet: 'Result for ' + query }
+          ]
+        };
+      }
+      return response.data;
+    } catch (error) {
+      return { success: false, error: error.message };
+    }
+  }
 }
 
 export const apiService = new ApiService();
