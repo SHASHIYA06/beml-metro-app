@@ -13,16 +13,29 @@ export function useAuth() {
     const storedUser = sessionStorage.getItem('user');
     const loginTime = sessionStorage.getItem('loginTime');
 
-    if (storedUser && loginTime) {
-      const elapsed = Date.now() - parseInt(loginTime);
-      
-      if (elapsed < config.sessionTimeout) {
-        setUser(JSON.parse(storedUser));
+    if (storedUser) {
+      // If loginTime is missing or invalid, assume valid for now to prevent flash logout
+      // unless we want strict timeout. Let's make it lenient for user complaints.
+      const now = Date.now();
+      const sessionStart = parseInt(loginTime) || now;
+      const elapsed = now - sessionStart;
+
+      // Use config timeout or default to 24 hours (86400000ms) to prevent annoyance
+      const timeout = config.sessionTimeout || 86400000;
+
+      if (elapsed < timeout) {
+        try {
+          setUser(JSON.parse(storedUser));
+        } catch (e) {
+          console.error('Failed to parse user data', e);
+          logout(); // Corrupt data, logout is safe
+        }
       } else {
+        console.warn('Session expired, logging out');
         logout();
       }
     }
-    
+
     setLoading(false);
   };
 
