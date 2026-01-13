@@ -3,13 +3,26 @@ import { config } from '../config';
 
 class ApiService {
   constructor() {
-    this.baseURL = config.googleScriptUrl;
+    // Dynamic URL from localStorage (Admin setting) or Config
+    const overrideUrl = localStorage.getItem('GOOGLE_SCRIPT_URL');
+    this.baseURL = overrideUrl || config.googleScriptUrl;
+
+    if (!this.baseURL) {
+      console.warn('Google Script URL is missing in config!');
+    }
+
     this.axiosInstance = axios.create({
       timeout: 30000,
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded'
       }
     });
+  }
+
+  // Update base URL dynamically
+  updateBaseURL(newUrl) {
+    this.baseURL = newUrl;
+    localStorage.setItem('GOOGLE_SCRIPT_URL', newUrl);
   }
 
   // Helper to convert object to form data
