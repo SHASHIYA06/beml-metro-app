@@ -19,34 +19,37 @@ export default function Dashboard({ user }) {
   const loadDashboardData = async () => {
     try {
       setLoading(true);
+      console.log('Fetching dashboard stats...');
       // Fetch real stats from Google Apps Script Backend
       const response = await apiService.getDashboardStats();
+      console.log('Dashboard stats response:', response);
 
       if (response && response.success) {
+        // SAFEGUARD: Ensure stats object exists to prevent crash
+        const statsData = response.stats || {};
+
         setStats({
-          totalEntries: response.stats.totalEntries || 0,
-          pendingApprovals: (user?.role === 'Officer' || user?.role === 'Admin') ? (response.stats.pendingApprovals || 0) : 0,
-          recentDocuments: response.stats.recentDocuments || 0,
-          myEntries: response.stats.myEntries || 0 // Or fetch separately if needed
+          totalEntries: statsData.totalEntries || 0,
+          pendingApprovals: (user?.role === 'Officer' || user?.role === 'Admin') ? (statsData.pendingApprovals || 0) : 0,
+          recentDocuments: statsData.recentDocuments || 0,
+          myEntries: statsData.myEntries || 0
         });
 
-        // Use backend activity or fallback if empty
-        if (response.recentActivity && response.recentActivity.length > 0) {
+        if (response.recentActivity && Array.isArray(response.recentActivity)) {
           setRecentActivity(response.recentActivity);
         } else {
           setRecentActivity([]);
         }
       } else {
-        // Fallback if backend doesn't return stats yet (avoid blank screen)
-        console.warn('Backend stats fetch failed, using zero/empty state', response?.error);
+        console.warn('Backend stats fetch failed or success=false', response?.error);
         setStats({ totalEntries: 0, pendingApprovals: 0, recentDocuments: 0, myEntries: 0 });
       }
 
     } catch (error) {
-      console.error('Error loading dashboard data:', error)
+      console.error('Error loading dashboard data:', error);
       setStats({ totalEntries: 0, pendingApprovals: 0, recentDocuments: 0, myEntries: 0 });
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 
